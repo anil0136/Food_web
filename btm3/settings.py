@@ -30,6 +30,7 @@ SECRET_KEY = os.environ.get(
 DEBUG = os.environ.get('RENDER') != 'true'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
@@ -71,6 +72,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_auto_logout.middleware.auto_logout'
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 # password hashers

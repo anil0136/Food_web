@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<style>
+    .register-wrapper { padding: 30px 0; }
+    .register-card {
+        max-width: 900px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 28px;
+        box-shadow: 0 12px 40px rgba(2,6,23,0.08);
+        border-top: 4px solid #ff6b35;
+    }
+    .register-title { text-align: center; font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+    .register-sub { text-align: center; color: #666; margin-bottom: 18px; }
+    .form-row { margin-bottom: 12px; }
+    .captcha-row { margin: 16px 0; display:flex; justify-content:center; }
+    .btn-register {
+        display: block; margin: 12px auto 0; padding: 10px 28px; background: linear-gradient(90deg,#ff6b35 0%, #ff964b 100%); color: white; border: none; border-radius: 10px; font-weight: 700;
+        box-shadow: 0 8px 24px rgba(255,107,53,0.16);
+    }
+    @media (max-width: 768px) {
+        .register-card { padding: 18px; }
+    }
+</style>
+
+<div class="container register-wrapper">
+    <div class="register-card">
+        {% if registered %}
+            <h2 class="register-title">Thank you for registering!</h2>
+            <p class="register-sub">Please proceed to <a href="{% url 'login' %}">Login</a></p>
+        {% else %}
+            <h2 class="register-title">Create Your Account</h2>
+            <p class="register-sub">Join us — fill in your details below to get started</p>
+
+            <form enctype="multipart/form-data" method="POST">
+                {% csrf_token %}
+                <div class="row form-row">
+                    <div class="col-md-6">{{ form1.username | as_crispy_field }}</div>
+                    <div class="col-md-6">{{ form1.email | as_crispy_field }}</div>
+                </div>
+                <div class="row form-row">
+                    <div class="col-md-6">{{ form2.phone | as_crispy_field }}</div>
+                    <div class="col-md-6">{{ form2.house_no | as_crispy_field }}</div>
+                </div>
+                <div class="row form-row">
+                    <div class="col-md-6">{{ form2.street | as_crispy_field }}</div>
+                    <div class="col-md-6">{{ form2.city | as_crispy_field }}</div>
+                </div>
+                <div class="row form-row">
+                    <div class="col-md-6">{{ form2.state | as_crispy_field }}</div>
+                    <div class="col-md-6">{{ form2.zipcode | as_crispy_field }}</div>
+                </div>
+                <div class="row form-row">
+                    <div class="col-md-6">{{ form1.password | as_crispy_field}}</div>
+                    <div class="col-md-6">{{ form2.userpic | as_crispy_field}}</div>
+                </div>
+                <div class="captcha-row">{{ form2.captcha }}</div>
+                <button type="submit" class="btn-register">REGISTER</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

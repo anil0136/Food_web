@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodLuxe</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <!-- Bootstrap Icons CSS (IMPORTANT) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            padding-top: 70px;
+            background: #f7f3ed;
+            color: #1f2933;
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        .navbar.fixed-top {
+            z-index: 1030;
+            background: #161b22 !important;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+        }
+        .brand-mark {
+            color: #fff;
+            font-weight: 800;
+            letter-spacing: .2px;
+            text-decoration: none;
+            margin-right: 18px;
+        }
+        .nav-link {
+            font-weight: 650;
+        }
+
+        .cart-btn {
+            background-color: #f7b801 !important;
+            color: #171717 !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.25rem !important;
+            font-weight: bold !important;
+            text-decoration: none !important;
+        }
+        .cart-btn:hover, .cart-btn:focus, .cart-btn:active {
+            background-color: #f7b801 !important;
+            color: #171717 !important;
+            text-decoration: none !important;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+
+<body>
+    <nav class="navbar bg-dark border-bottom border-body fixed-top" data-bs-theme="dark">
+        <div class="container-fluid d-flex">
+            <a class="brand-mark" href="{% url 'home' %}">
+                <span>FOOD<span class="brand-accent">LUXE</span></span>
+                <span class="brand-subtitle">PREMIUM FOOD DISCOVERY</span>
+            </a>
+            <ul class="nav navbar">
+                {% if user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link text-white" href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="{% url 'dashboard' %}">DashBoard</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                <li class="nav-item"><a class="nav-link text-white" href="{% url 'auth_choice' %}?mode=register">Register</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="{% url 'auth_choice' %}?mode=login">Login</a></li>
+                {% endif %}
+            </ul>
+            {% if user.is_authenticated %}
+            {% if user.userregister %}
+            <ul class="nav navbar ms-auto">
+                <li class="nav-item"><a class="cart-btn" href="{% url 'cart:displaycart' %}">Cart Item</a></li>
+            </ul>
+            {% endif %}
+            {% endif %}
+        </div>
+    </nav>
+
+    {# Django messages block - shows success/error/info messages site-wide #}
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}
+
+    {% endblock %}
+</body>
+
+</html>

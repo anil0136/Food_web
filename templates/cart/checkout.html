@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    /* Checkout Page Styling */
+    .container.mt-5 {
+        max-width: 1000px;
+        margin: 40px auto !important;
+    }
+
+    .card.shadow-lg {
+        background: white;
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border-top: 5px solid #667eea;
+    }
+
+    .card-body {
+        padding: 40px;
+    }
+
+    h3.text-center.text-primary.mb-4 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #0f172a !important;
+        margin-bottom: 30px !important;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    h3.text-center.text-primary.mb-4::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 2px;
+    }
+
+    /* Table Responsive */
+    .table-responsive {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .table {
+        margin-bottom: 0;
+        background: white;
+    }
+
+    .table thead.table-dark {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+
+    .table thead th {
+        padding: 18px !important;
+        font-weight: 700 !important;
+        color: white !important;
+        text-align: center !important;
+        border: none !important;
+        font-size: 14px;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid #e9ecef !important;
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        background: #f8f9ff;
+    }
+
+    .table tbody td {
+        padding: 18px !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+        color: #555;
+        font-size: 14px;
+    }
+
+    .table tbody td:nth-child(1) {
+        color: #667eea;
+        font-weight: 700;
+        width: 50px;
+    }
+
+    .table tbody td:nth-child(3) {
+        color: #333;
+        font-weight: 600;
+    }
+
+    .table tbody td:nth-child(4) {
+        color: #666;
+        font-size: 13px;
+    }
+
+    .table tbody td:nth-child(5),
+    .table tbody td:nth-child(7) {
+        color: #667eea;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .table tbody td:nth-child(6) {
+        font-weight: 600;
+        color: #333;
+    }
+
+    /* Images */
+    .table tbody img {
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .table tbody img:hover {
+        transform: scale(1.05);
+    }
+
+    /* Empty State */
+    .table tbody td[colspan="7"].text-muted {
+        padding: 40px !important;
+        color: #999 !important;
+        font-size: 16px;
+    }
+
+    /* Table Footer */
+    .table tfoot.table-light {
+        background: linear-gradient(135deg, #f8f9ff 0%, #f3f7ff 100%) !important;
+    }
+
+    .table tfoot tr {
+        border-top: 2px solid #e6eefc !important;
+        border-bottom: none !important;
+    }
+
+    .table tfoot tr:last-child {
+        border-bottom: 2px solid #667eea !important;
+    }
+
+    .table tfoot tr td {
+        padding: 16px 18px !important;
+        font-weight: 700 !important;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .table tfoot tr td.text-end {
+        text-align: right !important;
+        color: #666;
+        font-weight: 600;
+    }
+
+    .table tfoot tr:last-child td {
+        color: #667eea;
+        font-size: 16px;
+        padding: 18px 18px !important;
+    }
+
+    .table tfoot tr:last-child td.text-end {
+        color: #333;
+    }
+
+    .table tfoot tr:last-child td:last-child {
+        color: #667eea;
+        font-weight: 700;
+        font-size: 18px;
+    }
+
+    /* Place Order Button */
+    .text-end.mt-3 {
+        margin-top: 30px !important;
+        padding-top: 20px;
+        border-top: 2px solid #e9ecef;
+    }
+
+    .btn.btn-success.btn-lg {
+        background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%) !important;
+        border: none !important;
+        padding: 14px 40px !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        border-radius: 10px !important;
+        box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3) !important;
+        transition: all 0.3s ease !important;
+        color: white !important;
+        text-decoration: none !important;
+        display: inline-block;
+    }
+
+    .btn.btn-success.btn-lg:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(34, 197, 94, 0.4) !important;
+    }
+
+    .btn.btn-success.btn-lg:active {
+        transform: translateY(-1px);
+    }
+
+    .btn.btn-success.btn-lg i {
+        margin-right: 8px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 20px;
+        }
+
+        h3.text-center.text-primary.mb-4 {
+            font-size: 22px;
+        }
+
+        .table thead th,
+        .table tbody td {
+            padding: 12px !important;
+            font-size: 12px;
+        }
+
+        .table tbody img {
+            width: 50px !important;
+        }
+
+        .btn.btn-success.btn-lg {
+            width: 100%;
+            padding: 12px 20px !important;
+        }
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-body">
+
+            <h3 class="text-center text-primary mb-4">Checkout Summary</h3>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle text-center">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>No.</th>
+                            <th>Image</th>
+                            <th>Food Name</th>
+                            <th>Restaurant</th>
+                            <th>Price (₹)</th>
+                            <th>Qty</th>
+                            <th>Total (₹)</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for i in items %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+
+                            <td>
+                                {% if i.fooditem.food_img %}
+                                <img src="{{ i.fooditem.food_img.url }}" width="70" class="rounded">
+                                {% else %}
+                                <img src="{% static 'images/defoultimg.jpg' %}" width="70" class="rounded">
+                                {% endif %}
+                            </td>
+
+                            <td>{{ i.fooditem.food_name }}</td>
+                            <td>{{ i.fooditem.ver.restaurant_name }}</td>
+                            <td>₹{{ i.fooditem.price }}</td>
+                            <td>{{ i.Qty }}</td>
+                            <td>₹{{ i.item_total }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-muted">No items in cart</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                    <tfoot class="table-light fw-bold">
+                        <tr>
+                            <td colspan="5" class="text-end">Total Quantity</td>
+                            <td>{{ total_qty }}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" class="text-end">Grand Total</td>
+                            <td>₹{{ grand_total }}</td>
+                        </tr>
+                    </tfoot>
+
+                </table>
+            </div>
+
+            <!-- PLACE ORDER -->
+            <div class="text-end mt-3">
+                <a href="{% url 'cart:payment' %}" class="btn btn-success btn-lg">
+                    <i class="bi bi-check-circle"></i> Place Order
+                </a>                
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

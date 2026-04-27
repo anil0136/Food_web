@@ -1,0 +1,432 @@
+:root {
+    --app-bg: #050b14;
+    --app-bg-soft: #071322;
+    --app-panel: #0b1828;
+    --app-panel-2: #111d2c;
+    --app-line: #22344a;
+    --app-line-soft: rgba(148, 163, 184, .18);
+    --app-text: #f6f8fb;
+    --app-muted: #a8b7ca;
+    --app-faint: #718096;
+    --app-accent: #ffa72c;
+    --app-accent-dark: #e88e12;
+    --app-cyan: #39d5ff;
+    --app-danger: #ef5b5b;
+    --app-success: #29c984;
+    --app-shadow: 0 22px 70px rgba(0, 0, 0, .38);
+    --app-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+html {
+    background: var(--app-bg);
+}
+
+body {
+    min-height: 100vh;
+    background:
+        linear-gradient(115deg, rgba(17, 58, 78, .48) 0%, rgba(5, 11, 20, .62) 25%, rgba(5, 11, 20, .94) 57%, rgba(82, 58, 27, .42) 100%),
+        linear-gradient(rgba(255, 255, 255, .028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .028) 1px, transparent 1px),
+        var(--app-bg) !important;
+    background-size: auto, 60px 60px, 60px 60px, auto !important;
+    color: var(--app-text) !important;
+    font-family: var(--app-font) !important;
+    letter-spacing: 0 !important;
+}
+
+a {
+    color: var(--app-cyan);
+}
+
+a:hover {
+    color: var(--app-accent);
+}
+
+.navbar.fixed-top {
+    min-height: 88px;
+    background: rgba(5, 11, 20, .94) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, .08) !important;
+    box-shadow: 0 16px 50px rgba(0, 0, 0, .36) !important;
+    backdrop-filter: blur(18px);
+}
+
+.navbar .container-fluid {
+    max-width: 1180px;
+    margin: 0 auto;
+    gap: 18px;
+}
+
+.navbar .container-fluid > ul.nav:first-of-type {
+    margin-left: auto;
+}
+
+.brand-mark {
+    color: var(--app-text) !important;
+    display: inline-flex;
+    flex-direction: column;
+    font-size: 23px;
+    font-weight: 950;
+    letter-spacing: 2px;
+    line-height: 1.05;
+    text-transform: uppercase;
+}
+
+.brand-mark .brand-accent {
+    color: var(--app-accent);
+}
+
+.brand-mark .brand-subtitle {
+    color: var(--app-muted);
+    font-size: 11px;
+    font-weight: 650;
+    letter-spacing: 4px;
+    margin-top: 10px;
+}
+
+.nav-link {
+    color: var(--app-muted) !important;
+    font-weight: 650 !important;
+}
+
+.nav-link:hover {
+    color: var(--app-text) !important;
+}
+
+.navbar .container-fluid > ul.nav:first-of-type .nav-item:last-child .nav-link {
+    background: var(--app-accent) !important;
+    border-radius: 999px !important;
+    color: #0b0f15 !important;
+    padding: 14px 22px !important;
+    box-shadow: 0 18px 36px rgba(255, 167, 44, .22);
+}
+
+.cart-btn,
+.btn-warning,
+.btn-success,
+.btn-save,
+.btn-vendor,
+.btn-menu-building,
+.btn-register,
+.btn-add-cart,
+.btn-login,
+input[type="submit"] {
+    background: var(--app-accent) !important;
+    border: 1px solid var(--app-accent) !important;
+    color: #0b0f15 !important;
+    box-shadow: 0 18px 36px rgba(255, 167, 44, .26) !important;
+}
+
+.cart-btn:hover,
+.btn-warning:hover,
+.btn-success:hover,
+.btn-save:hover,
+.btn-vendor:hover,
+.btn-menu-building:hover,
+.btn-register:hover,
+.btn-add-cart:hover,
+.btn-login:hover,
+input[type="submit"]:hover {
+    background: var(--app-accent-dark) !important;
+    border-color: var(--app-accent-dark) !important;
+    color: #0b0f15 !important;
+}
+
+.btn,
+button,
+input[type="submit"] {
+    border-radius: 999px !important;
+    font-weight: 850 !important;
+    letter-spacing: 0 !important;
+}
+
+.btn-primary,
+.btn-dark,
+.btn-update {
+    background: transparent !important;
+    border: 1px solid var(--app-line) !important;
+    color: var(--app-text) !important;
+}
+
+.btn-primary:hover,
+.btn-dark:hover,
+.btn-update:hover {
+    background: var(--app-panel-2) !important;
+    border-color: var(--app-accent) !important;
+    color: var(--app-text) !important;
+}
+
+.btn-outline-light {
+    border-color: var(--app-line) !important;
+    color: var(--app-text) !important;
+}
+
+.btn-outline-light:hover {
+    background: var(--app-panel-2) !important;
+}
+
+.btn-danger {
+    background: var(--app-danger) !important;
+    border-color: var(--app-danger) !important;
+    color: #fff !important;
+}
+
+.container > .card,
+.card,
+.profile-card,
+.register-card,
+.vendor-card,
+.login-card,
+.menu-form-card,
+.restaurant-card,
+.food-card,
+.rounded-card-wrapper,
+.choice-card,
+.franchise-empty-state,
+.alert-secondary {
+    background: rgba(11, 24, 40, .88) !important;
+    border: 1px solid var(--app-line) !important;
+    border-radius: 20px !important;
+    box-shadow: var(--app-shadow) !important;
+    color: var(--app-text) !important;
+}
+
+.card-body,
+.restaurant-card-body,
+.food-card-body,
+.food-body,
+.card-info {
+    background: transparent !important;
+    color: var(--app-text) !important;
+}
+
+.dashboard-header,
+.vendor-hero,
+.hero-section,
+.home-hero {
+    background:
+        linear-gradient(115deg, rgba(15, 40, 60, .86) 0%, rgba(5, 11, 20, .84) 55%, rgba(76, 51, 23, .72) 100%),
+        linear-gradient(rgba(255, 255, 255, .028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .028) 1px, transparent 1px),
+        var(--app-bg) !important;
+    background-size: auto, 60px 60px, 60px 60px, auto !important;
+    border: 1px solid var(--app-line-soft) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.dashboard-header::before,
+.profile-image::after,
+.food-card::before,
+.section-title::after,
+.menu-title::after,
+.profile-details h2::after,
+.vendor-details h2::after,
+h3.mt-4::before,
+h3.text-center.mb-4::after,
+h3.text-center.text-primary.mb-4::after {
+    background: var(--app-accent) !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.hero-copy h1,
+.dashboard-header h1,
+.login-title,
+.register-title,
+.vendor-title,
+.menu-title,
+.section-title,
+.food-card-title,
+.food-body h3,
+.restaurant-card-body a {
+    color: var(--app-text) !important;
+    font-family: var(--app-font) !important;
+    font-weight: 950 !important;
+    letter-spacing: 0 !important;
+}
+
+.register-title strong,
+.vendor-title strong,
+.brand-accent,
+.price,
+.food-price,
+.food-card-price {
+    color: var(--app-accent) !important;
+}
+
+p,
+label,
+.form-label,
+.login-sub,
+.register-sub,
+.vendor-sub,
+.menu-subtitle,
+.hero-copy p,
+.section-head p,
+.food-meta,
+.text-muted,
+.profile-details p,
+.vendor-details p,
+.card-info p {
+    color: var(--app-muted) !important;
+}
+
+.profile-details p strong,
+.vendor-details p strong,
+.card-info strong {
+    color: var(--app-text) !important;
+}
+
+input,
+select,
+textarea,
+.form-control,
+.form-control-custom,
+input[type="file"] {
+    background: #111d2c !important;
+    border: 1px solid #314158 !important;
+    border-radius: 14px !important;
+    color: var(--app-text) !important;
+    min-height: 52px;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #8191a6 !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.form-control:focus,
+.form-control-custom:focus {
+    background: #142235 !important;
+    border-color: var(--app-accent) !important;
+    box-shadow: 0 0 0 4px rgba(255, 167, 44, .16) !important;
+    color: var(--app-text) !important;
+}
+
+.form-check {
+    background: rgba(17, 29, 44, .92) !important;
+    border: 1px solid var(--app-line) !important;
+}
+
+.table-responsive {
+    border: 1px solid var(--app-line) !important;
+    border-radius: 18px !important;
+    box-shadow: var(--app-shadow) !important;
+}
+
+.table {
+    background: var(--app-panel) !important;
+    color: var(--app-text) !important;
+    --bs-table-bg: rgba(11, 24, 40, .92) !important;
+    --bs-table-color: var(--app-muted) !important;
+    --bs-table-border-color: var(--app-line) !important;
+    --bs-table-hover-bg: rgba(255, 167, 44, .08) !important;
+    --bs-table-hover-color: var(--app-text) !important;
+}
+
+.table thead.table-dark,
+.franchise-orders-table thead,
+.table thead {
+    background: #07111e !important;
+    color: var(--app-text) !important;
+}
+
+.table tbody tr {
+    background: rgba(11, 24, 40, .86) !important;
+    border-color: var(--app-line) !important;
+}
+
+.table tbody tr:hover {
+    background: rgba(255, 167, 44, .08) !important;
+}
+
+.table tbody td,
+.table tfoot td,
+.table thead th {
+    background-color: rgba(11, 24, 40, .92) !important;
+    border-color: var(--app-line) !important;
+    color: var(--app-muted) !important;
+}
+
+.table tbody td a,
+.table tbody td strong {
+    color: var(--app-text) !important;
+}
+
+.badge.bg-success,
+.badge.bg-paid {
+    background: rgba(41, 201, 132, .16) !important;
+    border: 1px solid rgba(41, 201, 132, .42);
+    color: #69f0ad !important;
+}
+
+.badge.bg-warning {
+    background: rgba(255, 167, 44, .14) !important;
+    border: 1px solid rgba(255, 167, 44, .42);
+    color: var(--app-accent) !important;
+}
+
+.alert-success {
+    background: rgba(41, 201, 132, .14) !important;
+    color: #8ff0bf !important;
+    border: 1px solid rgba(41, 201, 132, .38) !important;
+}
+
+.alert-info,
+.alert-secondary {
+    background: rgba(17, 29, 44, .86) !important;
+    color: var(--app-muted) !important;
+    border: 1px solid var(--app-line) !important;
+}
+
+.alert-danger {
+    background: rgba(239, 91, 91, .14) !important;
+    color: #ffadad !important;
+    border: 1px solid rgba(239, 91, 91, .38) !important;
+}
+
+.profile-image img,
+.vendor-image img,
+.food-card img,
+.restaurant-card img,
+.rounded-card-wrapper img,
+.table tbody img {
+    border-radius: 16px !important;
+}
+
+.qty-count,
+.no-image {
+    background: #111d2c !important;
+    border: 1px solid var(--app-line) !important;
+    color: var(--app-muted) !important;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 88px !important;
+    }
+
+    .navbar.fixed-top {
+        min-height: 78px;
+    }
+
+    .brand-mark {
+        font-size: 18px;
+    }
+
+    .brand-mark .brand-subtitle {
+        font-size: 9px;
+        letter-spacing: 2px;
+    }
+
+    .dashboard-header h1,
+    .hero-copy h1 {
+        font-size: 36px !important;
+    }
+}

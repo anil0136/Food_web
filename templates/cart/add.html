@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .add-img-rounded {
+        border-radius: 15px;
+        overflow: hidden;
+        max-width: 220px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .add-img-rounded img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        display: block;
+    }
+    .add-cart-panel {
+        background: rgba(11, 24, 40, .86);
+        border: 1px solid var(--app-line);
+        border-radius: 20px;
+        box-shadow: var(--app-shadow);
+        padding: 28px;
+    }
+    .add-cart-layout {
+        align-items: start;
+        justify-content: center;
+        gap: 42px;
+    }
+    .quantity-controls {
+        display: grid;
+        grid-template-columns: 48px 72px 48px auto;
+        gap: 10px;
+        align-items: center;
+        margin-top: 12px;
+    }
+    .quantity-controls form {
+        margin: 0;
+    }
+    .quantity-display {
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--app-line);
+        border-radius: 14px;
+        background: #111d2c;
+        color: var(--app-text);
+        font-weight: 900;
+    }
+    .quantity-controls .btn {
+        height: 48px;
+        min-width: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    @media (max-width: 768px) {
+        .quantity-controls {
+            grid-template-columns: 48px 72px 48px;
+        }
+        .quantity-controls .view-cart-action {
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 style="text-align: center; margin-bottom: 30px;">Add Item To Cart</h1>
+        </div>
+    </div>
+    
+    {% if error %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-danger">{{ error }}</div>
+            </div>
+        </div>
+    {% else %}
+        <div class="row add-cart-layout add-cart-panel">
+            <div class="col-md-3">
+                <div class="add-img-rounded">
+                    {% if cart_item.fooditem.food_img %}
+                        <img src="{{ cart_item.fooditem.food_img.url }}" alt="{{ cart_item.fooditem.food_name }}">
+                    {% else %}
+                        <div style="width: 100%; height: 220px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center;">
+                            <p style="color: #666;">No image</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <p><strong>Food:</strong> {{ cart_item.fooditem.food_name }}</p>
+                <p><strong>Price:</strong> Rs. {{ cart_item.fooditem.price }}</p>
+                <p><strong>Description:</strong> {{ cart_item.fooditem.description }}</p>
+                
+                <div class="mb-3">
+                    <strong>Quantity:</strong>
+                    <div class="quantity-controls">
+                        <form method="post" action="{% url 'cart:addcart' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="foodid" value="{{ cart_item.fooditem.id }}">
+                            <input type="hidden" name="qty" value="{{ cart_item.Qty|add:'-1' }}">
+                            <button type="submit" class="btn btn-primary" aria-label="Decrease quantity" {% if cart_item.Qty <= 1 %}disabled{% endif %}>
+                                <i class="bi bi-dash-lg"></i>
+                            </button>
+                        </form>
+                        <div class="quantity-display">{{ cart_item.Qty }}</div>
+                        <form method="post" action="{% url 'cart:addcart' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="foodid" value="{{ cart_item.fooditem.id }}">
+                            <input type="hidden" name="qty" value="{{ cart_item.Qty|add:'1' }}">
+                            <button type="submit" class="btn btn-success" aria-label="Increase quantity">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </form>
+                        <a href="{% url 'cart:displaycart' %}" class="btn btn-primary view-cart-action">View Cart</a>
+                    </div>
+                </div>
+                
+                {% if created %}
+                    <p class="alert alert-success mt-3">Item added to cart!</p>
+                {% else %}
+                    <p class="alert alert-info mt-3">Quantity updated.</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

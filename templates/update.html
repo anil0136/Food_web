@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<style>
+    .update-container { margin-top: 30px; margin-bottom: 40px; }
+    .update-card {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 24px;
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 22px;
+        box-shadow: 0 10px 30px rgba(2,6,23,0.08);
+        align-items: start;
+    }
+    .profile-preview {
+        border-radius: 12px;
+        overflow: hidden;
+        text-align: center;
+        padding: 14px;
+        background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+        border: 1px solid #f1f5f9;
+    }
+    .preview-img {
+        width: 190px;
+        height: 190px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+        margin: 8px auto;
+        box-shadow: 0 8px 24px rgba(28, 36, 88, 0.08);
+    }
+    .profile-actions { margin-top: 14px; }
+    .btn-ghost { background: transparent; border: 1px dashed #cbd5e1; color: #334155; padding: 8px 12px; border-radius: 10px; }
+    .btn-primary-accent { background: linear-gradient(90deg,#667eea 0%,#764ba2 100%); color: white; border: none; padding: 10px 18px; border-radius: 10px; }
+
+    .form-column { padding: 6px 4px; }
+    .form-head { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+    .form-sub { color: #64748b; margin-bottom: 16px; }
+    .submit-row { margin-top: 14px; display:flex; gap:12px; }
+
+    @media (max-width: 900px) {
+        .update-card { grid-template-columns: 1fr; }
+        .preview-img { width: 140px; height: 140px; }
+    }
+</style>
+
+<div class="container update-container">
+    <div class="update-card">
+        <div class="profile-preview">
+            <h3 style="margin-top:6px;">Profile</h3>
+            {% if user.userregister and user.userregister.userpic %}
+                <img src="{{ user.userregister.userpic.url }}" alt="profile" class="preview-img">
+            {% else %}
+                <img src="{% static 'images/defoultimg.jpg' %}" alt="profile" class="preview-img">
+            {% endif %}
+            <div class="profile-actions">
+                <label class="btn-ghost" style="display:inline-block;">Change Photo
+                    <input type="file" name="userpic" form="update-form" style="display:none;">
+                </label>
+                <div style="height:8px;"></div>
+                <button class="btn-ghost">Remove Photo</button>
+            </div>
+        </div>
+
+        <div>
+            <div class="form-head">Update Profile</div>
+            <div class="form-sub">Edit your personal information below and click <strong>Save</strong>.</div>
+
+            <form id="update-form" enctype="multipart/form-data" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 form-column">{{ form1.username | as_crispy_field }}</div>
+                    <div class="col-md-6 form-column">{{ form1.email | as_crispy_field }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 form-column">{{ form2.phone | as_crispy_field }}</div>
+                    <div class="col-md-6 form-column">{{ form2.house_no | as_crispy_field }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 form-column">{{ form2.state | as_crispy_field }}</div>
+                    <div class="col-md-6 form-column">{{ form2.city | as_crispy_field }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 form-column">{{ form2.street | as_crispy_field }}</div>
+                    <div class="col-md-6 form-column">{{ form2.zipcode | as_crispy_field }}</div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12 form-column">{{ form2.userpic | as_crispy_field }}</div>
+                </div>
+                <div class="submit-row">
+                    <button type="submit" class="btn-primary-accent">Save Changes</button>
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

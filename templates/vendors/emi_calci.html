@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+    .jumbotron {
+        background: linear-gradient(180deg, #fbfdff 0%, #f1f6ff 100%);
+        padding: 22px;
+        border-radius: 12px;
+        border: 1px solid #e6eefc;
+    }
+
+    .card.card-body {
+        background: #ffffff;
+        border: none;
+        box-shadow: 0 12px 34px rgba(2,6,23,0.06);
+        padding: 22px;
+        border-radius: 10px;
+    }
+
+    h4.text-center {
+        font-size: 20px;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: 0.2px;
+    }
+
+    label { font-weight: 700; color: #0f172a; }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #e6eefc;
+        padding: 10px 12px;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .form-control:focus {
+        border-color: #2563eb;
+        box-shadow: 0 8px 20px rgba(37,99,235,0.08);
+    }
+
+    .btn-primary {
+        background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%);
+        border: none;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-weight: 700;
+        box-shadow: 0 8px 22px rgba(37,99,235,0.12);
+    }
+
+    .btn-primary:hover { transform: translateY(-2px); }
+
+    .img-fluid { border-radius: 8px; box-shadow: 0 8px 24px rgba(2,6,23,0.06); }
+
+    .alert { border-radius: 8px; font-weight: 700; }
+
+    @media (max-width: 768px) {
+        .jumbotron { padding: 16px; }
+        h4.text-center { font-size: 18px; }
+        .row { gap: 12px; }
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="jumbotron">
+        <div class="card card-body">
+            <h4 class="text-center mb-4"><b><i class="bi bi-calculator" style="color: #667eea; margin-right: 10px;"></i>EMI Calculator</b></h4>
+            <hr>
+
+```
+        <!-- Auto-filled Franchise & Vendor Details -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label><b><i class="bi bi-shop" style="color: #667eea; margin-right: 6px;"></i>Restaurant Name</b></label>
+                <input type="text" class="form-control" value="{{ vendor.restaurant_name }}" readonly>
+            </div>
+            <div class="col-md-6">
+                <label><b><i class="bi bi-coin" style="color: #ffc107; margin-right: 6px;"></i>Investment Amount (₹)</b></label>
+                <input type="text" class="form-control" value="{{ fran.total_investment }}" readonly>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label><b><i class="bi bi-calendar" style="color: #28a745; margin-right: 6px;"></i>Total Years of Agreement</b></label>
+                <input type="text" class="form-control" value="{{ fran.total_year_of_aggr }}" readonly>
+            </div>
+            <div class="col-md-6">
+                <label><b><i class="bi bi-percent" style="color: #dc3545; margin-right: 6px;"></i>Profit Share (%)</b></label>
+                <input type="text" class="form-control" value="{{ fran.profit_share }}" readonly>
+            </div>
+        </div>
+
+        <!-- EMI Form -->
+        <form method="post" class="mt-4">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label><b><i class="bi bi-cash-coin" style="color: #667eea; margin-right: 6px;"></i>Loan Amount (₹)</b></label>
+                        <input type="number" name="loan_amount" class="form-control" required placeholder="Enter loan amount">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label><b><i class="bi bi-hourglass-split" style="color: #ffc107; margin-right: 6px;"></i>Loan Duration (Years)</b></label>
+                        <select name="loan_years" class="form-control" required>
+                            <option value="">-- Select Years --</option>
+                            <option value="1">1 Year</option>
+                            <option value="2">2 Years</option>
+                            <option value="5">5 Years</option>
+                            <option value="7">7 Years</option>
+                            <option value="10">10 Years</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-calculator" style="margin-right: 8px;"></i>Calculate EMI</button>
+        </form>
+
+        <!-- EMI Result -->
+        {% if emi %}
+            <div class="alert alert-success mt-4 text-center">
+                <b><i class="bi bi-check-circle" style="margin-right: 8px;"></i>Monthly EMI:</b> ₹ {{ emi|floatformat:2 }}
+            </div>
+        {% elif error_message %}
+            <div class="alert alert-danger mt-4 text-center">
+                <i class="bi bi-exclamation-triangle" style="margin-right: 8px;"></i>{{ error_message }}
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+```
+
+</div>
+{% endblock %}

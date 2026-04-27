@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .rounded-card-wrapper {
+        border-radius: 15px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        height: 100%;
+    }
+    .rounded-card-wrapper img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        display: block;
+    }
+    .card-info {
+        padding: 12px;
+    }
+    .card-info h5 {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+    .card-info p {
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    .qty-actions {
+        display: grid;
+        grid-template-columns: 36px minmax(42px, 1fr) 36px 42px;
+        gap: 6px;
+        align-items: center;
+        margin-top: 12px;
+    }
+    .qty-actions form { margin: 0; }
+    .qty-actions .btn,
+    .qty-count {
+        width: 100%;
+        height: 36px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+    }
+    .qty-count {
+        background: #f4efe7;
+        color: #1f2933;
+        border: 1px solid #e7ded2;
+    }
+</style>
+
+<div class="container mt-4">
+    <h1 style="text-align: center; margin-bottom: 30px;"><i class="bi bi-cart3" style="color: #667eea; margin-right: 10px;"></i>Items In Cart</h1>
+    {% if cart_items and cart_items.exists %}
+        <div class="row">
+        {% for item in cart_items %}
+            <div class="col-md-3 mb-4">
+                <div class="rounded-card-wrapper">
+                    {% if item.fooditem.food_img %}
+                        <img src="{{ item.fooditem.food_img.url }}" alt="{{ item.fooditem.food_name }}">
+                    {% else %}
+                        <div style="width: 100%; height: 150px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center;">
+                            <p style="color: #666;">No image</p>
+                        </div>
+                    {% endif %}
+                    <div class="card-info">
+                        <h5 class="card-title"><i class="bi bi-shop" style="color: #667eea; margin-right: 5px;"></i>{{ item.fooditem.food_name }}</h5>
+                        <p><i class="bi bi-tag" style="color: #ffc107; margin-right: 5px;"></i><strong>Price:</strong> Rs. {{ item.fooditem.price }}</p>
+                        <p><i class="bi bi-box" style="color: #28a745; margin-right: 5px;"></i><strong>Qty:</strong> {{ item.Qty }}</p>
+                        <div class="qty-actions">
+                            <form method="post" action="{% url 'cart:updatecart' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="cart_id" value="{{ item.id }}">
+                                <input type="hidden" name="qty" value="{{ item.Qty|add:'-1' }}">
+                                <button type="submit" class="btn btn-outline-dark btn-sm" aria-label="Decrease {{ item.fooditem.food_name }}">-</button>
+                            </form>
+                            <div class="qty-count">{{ item.Qty }}</div>
+                            <form method="post" action="{% url 'cart:updatecart' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="cart_id" value="{{ item.id }}">
+                                <input type="hidden" name="qty" value="{{ item.Qty|add:'1' }}">
+                                <button type="submit" class="btn btn-dark btn-sm" aria-label="Increase {{ item.fooditem.food_name }}">+</button>
+                            </form>
+                            <form method="post" action="{% url 'cart:updatecart' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="cart_id" value="{{ item.id }}">
+                                <input type="hidden" name="qty" value="0">
+                                <button type="submit" class="btn btn-sm btn-danger" aria-label="Remove {{ item.fooditem.food_name }}"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p style="text-align: center; font-size: 18px;">Your cart is empty.</p>
+    {% endif %}
+
+    {% if cart_items and cart_items.exists %}
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5><i class="bi bi-cart-check" style="color: #667eea; margin-right: 8px;"></i>Total Items: <span class="badge bg-primary" style="font-size: 14px;">{{ total_items }}</span></h5>
+                        </div>
+                        <div class="col-md-4 ">
+                            <h5><i class="bi bi-currency-rupee" style="color: #28a745; margin-right: 8px;"></i>Total Price: <span class="badge bg-success" style="font-size: 14px;">Rs. {{ total_price }}</span></h5>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="col-md-4 text-md-end"><a href="{% url 'cart:checkout'  %}" class="btn btn-success w-100"> Proceed to Checkout </a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

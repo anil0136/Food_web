@@ -1,0 +1,860 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+    }
+
+    .dashboard-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 50px 20px;
+        border-radius: 15px;
+        margin-bottom: 40px;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 500px;
+        height: 500px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+
+    .dashboard-header h1 {
+        font-size: 48px;
+        font-weight: 700;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+        letter-spacing: 1px;
+    }
+
+    .profile-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        margin-bottom: 40px;
+        border-top: 4px solid #667eea;
+        transition: all 0.3s ease;
+    }
+
+    .profile-card:hover {
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+    }
+
+    .profile-image {
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .profile-image::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, transparent 0%, rgba(102, 126, 234, 0.1) 100%);
+        border-radius: 20px;
+    }
+
+    .profile-image img {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .profile-details h2 {
+        color: #333;
+        font-weight: 700;
+        margin-bottom: 25px;
+        font-size: 32px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .profile-details h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 2px;
+    }
+
+    .profile-details p {
+        font-size: 16px;
+        margin-bottom: 15px;
+        color: #666;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+        transition: all 0.3s ease;
+    }
+
+    .profile-details p:hover {
+        color: #667eea;
+        padding-left: 10px;
+    }
+
+    .profile-details p strong {
+        color: #333;
+        font-weight: 600;
+        display: inline-block;
+        min-width: 140px;
+    }
+
+    .btn-update,
+    .btn-menu-building {
+        margin-top: 25px;
+        padding: 12px 35px;
+        font-size: 16px;
+        font-weight: 600;
+        border: none;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn-update {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-update:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .menu-section {
+        margin-top: 60px;
+    }
+
+    .menu-title {
+        font-size: 36px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 35px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .menu-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 80px;
+        height: 5px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 3px;
+    }
+
+    .food-card {
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        height: 100%;
+        position: relative;
+        background: white;
+    }
+
+    .food-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        z-index: 1;
+    }
+
+    .food-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    .food-card-image {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.4s ease;
+    }
+
+    .food-card:hover .food-card-image {
+        transform: scale(1.08);
+    }
+
+    .food-card-body {
+        padding: 25px;
+    }
+
+    .food-card-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 10px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .food-card-price {
+        font-size: 20px;
+        color: #667eea;
+        font-weight: 700;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-group-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-group-actions .btn {
+        flex: 1;
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn-group-actions .btn-success {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);
+    }
+
+    .btn-group-actions .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(17, 153, 142, 0.4);
+    }
+
+    .btn-group-actions .btn-danger {
+        background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(235, 51, 73, 0.3);
+    }
+
+    .btn-group-actions .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(235, 51, 73, 0.4);
+    }
+
+    .vendor-section {
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+    }
+
+    .vendor-image {
+        flex: 0 0 320px;
+    }
+
+    .vendor-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+    }
+
+    .vendor-image:hover img {
+        transform: scale(1.05);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    .vendor-details {
+        flex: 1;
+    }
+
+    .vendor-details h2 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 25px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .vendor-details h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 2px;
+    }
+
+    .vendor-details p {
+        font-size: 16px;
+        margin-bottom: 15px;
+        color: #666;
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+        transition: all 0.3s ease;
+    }
+
+    .vendor-details p:hover {
+        color: #667eea;
+        padding-left: 10px;
+    }
+
+    .vendor-details p strong {
+        color: #333;
+        font-weight: 600;
+        display: inline-block;
+        min-width: 140px;
+    }
+
+    .btn-menu-building {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        box-shadow: 0 6px 20px rgba(245, 87, 108, 0.3);
+    }
+
+    .btn-menu-building:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+    }
+
+    @media (max-width: 768px) {
+        .vendor-section {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .vendor-image {
+            flex: 0 0 auto;
+        }
+
+        .dashboard-header h1 {
+            font-size: 36px;
+        }
+
+        .profile-details h2,
+        .vendor-details h2 {
+            font-size: 24px;
+        }
+    }
+
+    /* Franchise Orders Table Styling */
+    .franchise-orders-wrapper {
+        overflow-x: auto;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+    }
+
+    .franchise-orders-table {
+        margin: 0;
+        background: white;
+        border-radius: 12px;
+    }
+
+    .franchise-orders-table thead {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .franchise-orders-table thead th {
+        padding: 18px !important;
+        border: none !important;
+        font-weight: 700 !important;
+        text-align: center !important;
+    }
+
+    .franchise-orders-table tbody tr {
+        border-bottom: 1px solid #f0f0f0 !important;
+        transition: background 0.3s ease;
+    }
+
+    .franchise-orders-table tbody tr:hover {
+        background: #f8f9ff !important;
+    }
+
+    .franchise-orders-table tbody td {
+        padding: 16px !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+
+    .franchise-orders-table tbody td:nth-child(1),
+    .franchise-orders-table tbody td:nth-child(2) {
+        color: #333;
+        font-weight: 600;
+    }
+
+    .franchise-orders-table tbody td:nth-child(3) {
+        color: #667eea;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .franchise-orders-table tbody td:nth-child(4),
+    .franchise-orders-table tbody td:nth-child(5) {
+        color: #666;
+    }
+
+    .franchise-orders-table tbody td:nth-child(6) {
+        color: #999;
+        font-size: 13px;
+    }
+
+    .franchise-empty-state {
+        background: #f8f9ff;
+        padding: 30px;
+        text-align: center;
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+    }
+
+    .franchise-empty-state p {
+        color: #999;
+        font-size: 16px;
+        margin: 0;
+    }
+
+    /* Food Orders Table Styling */
+    .table-responsive {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table thead.table-dark {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+
+    .table thead th {
+        padding: 18px !important;
+        font-weight: 700 !important;
+        text-align: center !important;
+        border: none !important;
+    }
+
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        background: #f8f9ff;
+    }
+
+    .table tbody td {
+        padding: 16px !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+
+    .table tbody td:nth-child(1) {
+        color: #667eea;
+        font-weight: 700;
+    }
+
+    .table tbody td:nth-child(2),
+    .table tbody td:nth-child(3) {
+        color: #333;
+        font-weight: 600;
+    }
+
+    .table tbody td:nth-child(4) {
+        text-align: left !important;
+    }
+
+    /* Ordered Items List */
+    .ordered-items-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .ordered-items-list .py-1 {
+        padding: 10px 0 !important;
+        color: #555;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+    }
+
+    .ordered-items-list .py-1::before {
+        content: '✓';
+        color: #28a745;
+        font-weight: bold;
+        margin-right: 8px;
+    }
+
+    .ordered-items-list .border-bottom {
+        border-bottom: 1px solid #e9ecef !important;
+    }
+
+    /* Badge Styling */
+    .badge {
+        padding: 8px 16px !important;
+        font-weight: 600 !important;
+        border-radius: 20px !important;
+    }
+
+    .badge.bg-success {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
+    }
+
+    .badge.bg-warning {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+        color: white !important;
+    }
+
+    .badge.bg-paid {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
+        color: white !important;
+    }
+
+    /* Section Titles */
+    h3.mt-4 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 25px !important;
+        position: relative;
+        padding-bottom: 12px;
+    }
+
+    h3.mt-4::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 2px;
+    }
+
+    /* Empty State */
+    .alert-secondary {
+        background: #f8f9ff !important;
+        border: 1px solid #e6eefc !important;
+        color: #666 !important;
+        padding: 25px !important;
+        border-radius: 12px !important;
+        font-weight: 600 !important;
+    }
+
+</style>
+
+<div class="container mt-4">
+    <div class="dashboard-header">
+        <h1>Dashboard</h1>
+    </div>
+
+    {% if user.userregister %}
+    <!-- User Profile -->
+    <div class="profile-card">
+        <h2 style="text-align: center; margin-bottom: 30px; color: #333;">{{ user.username }}'s Profile</h2>
+
+        <div class="row">
+            <div class="col-md-5">
+                <div class="profile-image">
+                    {% if user.userregister.userpic %}
+                    <img src="{{ user.userregister.userpic.url }}" alt="{{ user.username }}">
+                    {% else %}
+                    <img src="{% static 'images/defoultimg.jpg' %}" alt="Default Image">
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-7">
+                <div class="profile-details">
+                    <h2>User Details</h2>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Phone:</strong> {{ user.userregister.phone }}</p>
+                    <p><strong>House No:</strong> {{ user.userregister.house_no }}</p>
+                    <p><strong>Street:</strong> {{ user.userregister.street }}</p>
+                    <p><strong>City:</strong> {{ user.userregister.city }}</p>
+                    <p><strong>State:</strong> {{ user.userregister.state }}</p>
+                    <p><strong>Zipcode:</strong> {{ user.userregister.zipcode }}</p>
+                    <a class="btn btn-primary btn-update" href="{% url 'update' %}">Update Profile</a>
+                </div>
+            </div>
+            {% if user_profile %}
+        <br>
+        <!-- USER ORDER -->
+        <h3 class="mt-4">My Food Orders</h3>
+
+        {% if food_orders %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Items</th>
+                        <th>Total Amount</th>
+                        <th>Payment Method</th>
+                        <th>Status</th>
+                        <th>Order Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in food_orders %}
+                    <tr>
+                        <td>No.{{ order.id }}</td>
+                        <td>
+                            <ul class="list-unstyled mb-0">
+                                {% for item in order.items.all %}
+                                <div class="py-1 {% if not forloop.last %}border-bottom{% endif %}">
+                                    {{ item.food_item.food_name }} × {{ item.qty }}
+                                </div>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>₹{{ order.total_amount }}</td>
+                        <td>{{ order.payment_method|upper }}</td>
+                        <td>
+                            {% if order.is_paid %}
+                            <span class="badge bg-success">Success</span>
+                            {% else %}
+                            <span class="badge bg-warning">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ order.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-secondary text-center">
+            No food orders yet
+        </div>
+        {% endif %}
+        {% endif %}
+        </div>
+    </div>
+
+
+    {% else %}
+    <!-- Vendor Profile -->
+    <div class="profile-card">
+        <h2 style="text-align: center; margin-bottom: 30px; color: #333;">{{ user.username }}'s Restaurant</h2>
+
+        <div class="vendor-section">
+            <div class="vendor-image">
+                {% if user.multivendors.restaurant_img %}
+                <img src="{{ user.multivendors.restaurant_img.url }}" alt="{{ user.multivendors.restaurant_name }}">
+                {% else %}
+                <img src="{% static 'images/defoultimg.jpg' %}" alt="Default Image">
+                {% endif %}
+            </div>
+
+            <div class="vendor-details">
+                <h2>Restaurant Details</h2>
+                <p><strong>Restaurant Name:</strong> {{ user.multivendors.restaurant_name }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Address:</strong> {{ user.multivendors.address }}</p>
+                <p><strong>State:</strong> {{ user.multivendors.state }}</p>
+                <p><strong>City:</strong> {{ user.multivendors.city }}</p>
+                <p><strong>ZIP Code:</strong> {{ user.multivendors.zip_code }}</p>
+                <a class="btn btn-warning btn-menu-building" href="{% url 'vendors:menubuilding' %}">
+                    <i class="bi bi-plus-circle"></i> Add Food Item
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Franchise Orders Section -->
+    <div class="menu-section">
+        <h3 class="menu-title">Franchise Orders</h3>
+
+        {% if franchise_orders %}
+        <div style="overflow-x: auto; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border-radius: 12px;">
+            <table class="table table-hover" style="margin: 0; background: white; border-radius: 12px;">
+                <thead style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <tr>
+                        <th style="padding: 18px; border: none; font-weight: 700;">User Name</th>
+                        <th style="padding: 18px; border: none; font-weight: 700;">User Email</th>
+                        <th style="padding: 18px; border: none; font-weight: 700;">Total Investment (₹)</th>
+                        <th style="padding: 18px; border: none; font-weight: 700;">Years Agreement</th>
+                        <th style="padding: 18px; border: none; font-weight: 700;">Profit Share (%)</th>
+                        <th style="padding: 18px; border: none; font-weight: 700;">Order Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in franchise_orders %}
+                    <tr style="border-bottom: 1px solid #f0f0f0; transition: background 0.3s ease;"
+                        onmouseover="this.style.background='#f8f9ff'" onmouseout="this.style.background='white'">
+                        <td style="padding: 16px; color: #333; font-weight: 600;">{{ order.user.username }}</td>
+                        <td style="padding: 16px; color: #666;">{{ order.user.email }}</td>
+                        <td style="padding: 16px; color: #667eea; font-weight: 700;">
+                            {% if order.franchise %}
+                                ₹ {{ order.franchise.total_investment }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td style="padding: 16px; color: #333;">
+                            {% if order.franchise %}
+                                {{ order.franchise.total_year_of_aggr }} Years
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td style="padding: 16px; color: #333;">
+                            {% if order.franchise %}
+                                {{ order.franchise.profit_share }}%
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td style="padding: 16px; color: #999; font-size: 13px;">{{ order.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div
+            style="background: #f8f9ff; padding: 30px; text-align: center; border-radius: 12px; border-left: 4px solid #667eea;">
+            <p style="color: #999; font-size: 16; margin: 0;">No franchise orders yet</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Food Menu -->
+    <div class="menu-section">
+        <h3 class="menu-title">Food Menu</h3>
+
+        <div class="row g-4">
+            {% for ver in allfood %}
+            <div class="col-md-6 col-lg-4">
+                <div class="food-card">
+                    <img src="{% if ver.food_img %}{{ ver.food_img.url }}{% else %}{% static 'images/defoultimg.jpg' %}{% endif %}"
+                        class="food-card-image" alt="{{ ver.food_name }}">
+                    <div class="food-card-body">
+                        <h5 class="food-card-title">{{ ver.food_name }}</h5>
+                        <p class="food-card-price">Rs. {{ ver.price }}</p>
+                        <div class="btn-group-actions">
+                            <a href="{% url 'vendors:edit' ver.id %}" class="btn btn-success btn-sm">
+                                <i class="bi bi-pencil-fill"></i> Edit
+                            </a>
+                            <a href="{% url 'vendors:deletefood' ver.id %}" class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <hr>
+    <h3 class="mt-4">Food Orders ( {{ user.multivendors.restaurant_name }} Restaurant)</h3>
+
+    {% if vendor_orders %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>Order ID</th>
+                    <th>User Name</th>
+                    <th>Email</th>
+                    <th>Person Details</th>
+                    <th>Ordered Items</th>
+                    <th>Vendor Total</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                    <th>Order Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in vendor_orders %}
+                <tr>
+                    <td>#{{ data.order.id }}</td>
+                    <td>{{ data.order.user.username }}</td>
+                    <td>{{ data.order.user.email }}</td>
+                    <td class="text-start">
+                        {% if data.order.user.userregister %}
+                            <div>{{ data.order.user.userregister.phone }}</div>
+                            <div>{{ data.order.user.userregister.house_no }}, {{ data.order.user.userregister.street }}</div>
+                            <div>{{ data.order.user.userregister.city }}, {{ data.order.user.userregister.state }} {{ data.order.user.userregister.zipcode }}</div>
+                        {% else %}
+                            Account details unavailable
+                        {% endif %}
+                    </td>
+                    <td class="text-start">
+                        {% for item in data.items %}
+                        <div class="py-1 {% if not forloop.last %}border-bottom{% endif %}">
+                            {{ item.food_item.food_name }} × {{ item.qty }}
+                            (₹{{ item.food_item.price }})
+                        </div>
+                        {% endfor %}
+                    </td>
+                    <td>Rs. {{ data.vendor_total }}</td>
+                    <td>{{ data.order.payment_method|upper }}</td>
+                    <td>
+                        {% if data.order.is_paid %}
+                        <span class="badge bg-success">Paid</span>
+                        {% else %}
+                        <span class="badge bg-warning">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ data.order.created_at|date:"M d, Y h:i A" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-secondary text-center">
+        No food orders yet
+    </div>
+    {% endif %}
+
+</div>
+{% endif %}
+</div>
+</div>
+<br>
+{% endblock %}

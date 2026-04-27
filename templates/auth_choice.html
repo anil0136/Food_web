@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .choice-shell {
+        max-width: 960px;
+        margin: 38px auto;
+        padding: 0 16px;
+    }
+    .choice-header {
+        margin-bottom: 22px;
+    }
+    .choice-header h1 {
+        font-size: 34px;
+        font-weight: 850;
+        color: #151a21;
+    }
+    .choice-header p {
+        color: #5d6470;
+        margin: 0;
+    }
+    .choice-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+    .choice-card {
+        background: #fff;
+        border: 1px solid #e7ded2;
+        border-radius: 8px;
+        padding: 26px;
+        box-shadow: 0 14px 34px rgba(31, 41, 51, .08);
+    }
+    .choice-card h2 {
+        font-size: 22px;
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+    .choice-card p {
+        color: #65707d;
+        min-height: 48px;
+    }
+    .choice-card .btn {
+        border-radius: 6px;
+        font-weight: 750;
+        padding: 10px 18px;
+    }
+    @media (max-width: 700px) {
+        .choice-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="choice-shell">
+    <div class="choice-header">
+        <h1>{% if mode == 'login' %}Choose Login Type{% else %}Choose Registration Type{% endif %}</h1>
+        <p>Select whether you are ordering food or managing a restaurant.</p>
+    </div>
+
+    <div class="choice-grid">
+        <div class="choice-card">
+            <h2>User</h2>
+            <p>Browse restaurants, add food to cart, place orders, and view order history.</p>
+            {% if mode == 'login' %}
+                <a class="btn btn-dark" href="{% url 'login' %}">User Login</a>
+            {% else %}
+                <a class="btn btn-dark" href="{% url 'registeration' %}">User Register</a>
+            {% endif %}
+        </div>
+        <div class="choice-card">
+            <h2>Vendor</h2>
+            <p>Register your restaurant, add products, and track customer order details.</p>
+            {% if mode == 'login' %}
+                <a class="btn btn-success" href="{% url 'login' %}">Vendor Login</a>
+            {% else %}
+                <a class="btn btn-success" href="{% url 'vendors:vendorReg' %}">Vendor Register</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

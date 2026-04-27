@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .home-hero {
+        min-height: 420px;
+        margin-top: -14px;
+        background:
+            linear-gradient(90deg, rgba(16, 24, 32, .86), rgba(16, 24, 32, .42)),
+            url("{% static 'images/food_backgrount.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        display: flex;
+        align-items: center;
+    }
+    .hero-copy {
+        max-width: 680px;
+    }
+    .hero-copy h1 {
+        font-size: clamp(38px, 6vw, 68px);
+        line-height: 1;
+        font-weight: 900;
+        margin-bottom: 18px;
+    }
+    .hero-copy p {
+        font-size: 18px;
+        color: rgba(255,255,255,.86);
+        max-width: 570px;
+    }
+    .hero-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+    }
+    .hero-actions .btn {
+        border-radius: 6px;
+        padding: 12px 20px;
+        font-weight: 800;
+    }
+    .section-wrap {
+        padding: 38px 0;
+    }
+    .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 20px;
+        margin-bottom: 18px;
+    }
+    .section-head h2 {
+        font-size: 28px;
+        font-weight: 850;
+        margin: 0;
+    }
+    .section-head p {
+        color: #65707d;
+        margin: 0;
+    }
+    .food-card,
+    .restaurant-card {
+        background: #fff;
+        border: 1px solid #e7ded2;
+        border-radius: 8px;
+        overflow: hidden;
+        height: 100%;
+        box-shadow: 0 12px 28px rgba(31, 41, 51, .08);
+    }
+    .food-card-link,
+    .restaurant-card-link {
+        color: inherit;
+        display: block;
+        height: 100%;
+        text-decoration: none;
+    }
+    .food-card,
+    .restaurant-card {
+        cursor: pointer;
+        transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+    .food-card:hover,
+    .restaurant-card:hover {
+        transform: translateY(-6px);
+        border-color: var(--app-accent);
+    }
+    .food-card img,
+    .restaurant-card img,
+    .no-image {
+        width: 100%;
+        height: 190px;
+        object-fit: cover;
+        background: #ece4d8;
+    }
+    .no-image {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #65707d;
+        font-weight: 700;
+    }
+    .food-body,
+    .restaurant-card-body {
+        padding: 16px;
+    }
+    .food-body h3,
+    .restaurant-card-body a {
+        color: #151a21;
+        display: block;
+        font-size: 18px;
+        font-weight: 850;
+        margin-bottom: 6px;
+        text-decoration: none;
+    }
+    .food-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        color: #65707d;
+    }
+    .price {
+        color: #0f8f54;
+        font-weight: 850;
+    }
+    @media (max-width: 700px) {
+        .home-hero { min-height: 500px; }
+        .section-head { display: block; }
+    }
+</style>
+
+<section class="home-hero">
+    <div class="container">
+        <div class="hero-copy">
+            <h1>Food<span style="color: var(--app-accent);">Luxe</span></h1>
+            <p>Discover restaurant dishes, compare menus, and order your next meal from local vendors.</p>
+            {% if not user.is_authenticated %}
+            <div class="hero-actions">
+                <a class="btn btn-warning" href="{% url 'auth_choice' %}?mode=register">Register</a>
+                <a class="btn btn-outline-light" href="{% url 'auth_choice' %}?mode=login">Login</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<div class="container section-wrap">
+    <div class="section-head">
+        <div>
+            <h2>Featured Food Items</h2>
+            <p>Fresh picks from approved restaurants.</p>
+        </div>
+    </div>
+    <div class="row g-4">
+        {% for food in featured_food %}
+        <div class="col-md-6 col-lg-3">
+            <a class="food-card-link" href="{% url 'vendors:vendor_detail' id=food.ver.id %}" aria-label="Open {{ food.ver.restaurant_name }}">
+                <div class="food-card">
+                    {% if food.food_img %}
+                        <img src="{{ food.food_img.url }}" alt="{{ food.food_name }}">
+                    {% else %}
+                        <img src="{% static 'images/defoultimg.jpg' %}" alt="{{ food.food_name }}">
+                    {% endif %}
+                    <div class="food-body">
+                        <h3>{{ food.food_name }}</h3>
+                        <div class="food-meta">
+                            <span>{{ food.ver.restaurant_name }}</span>
+                            <span class="price">Rs. {{ food.price }}</span>
+                        </div>
+                        <span class="btn btn-sm btn-dark mt-3 w-100">View Restaurant</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-secondary text-center">No food items available yet.</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="container section-wrap pt-0">
+    <div class="section-head">
+        <div>
+            <h2>Restaurants</h2>
+            <p>Choose a restaurant to see the full menu.</p>
+        </div>
+    </div>
+    <div class="row g-4">
+        {% for i in allvendors %}
+        <div class="col-md-6 col-lg-3">
+            <a class="restaurant-card-link" href="{% url 'vendors:vendor_detail' id=i.id %}" aria-label="Open {{ i.restaurant_name }}">
+                <div class="restaurant-card">
+                    {% if i.restaurant_img %}
+                        <img src="{{ i.restaurant_img.url }}" alt="{{ i.restaurant_name }}">
+                    {% else %}
+                        <div class="no-image">No image</div>
+                    {% endif %}
+                    <div class="restaurant-card-body">
+                        <h3>{{ i.restaurant_name }}</h3>
+                        <span class="text-muted">{{ i.city }}, {{ i.state }}</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-secondary text-center">No approved restaurants available yet.</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+  .vendor-hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 32px 0; margin-bottom: 28px; position: relative; }
+  .vendor-title { color: #fff; font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .vendor-owner { color: rgba(255,255,255,0.9); font-size: 16px; }
+  
+  .franchise-top-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #16a34a, #059669);
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .franchise-top-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .vendor-wrap { padding: 20px 0; }
+  .menu-header { font-size: 24px; font-weight: 700; margin: 28px 0 18px 0; color: #1f2937; }
+  
+  .food-card { 
+    border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: all 0.3s ease; border: 1px solid #f0f0f0;
+  }
+  .food-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+  .food-card-inner { display: flex; height: 220px; }
+  .food-img-wrap { width: 35%; overflow: hidden; background: #f8fafc; }
+  .food-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  
+  .food-info { width: 65%; padding: 12px 16px; display: flex; flex-direction: column; justify-content: space-between; }
+  .food-name { font-size: 16px; font-weight: 700; margin: 0 0 4px 0; color: #1f2937; }
+  .food-price { font-size: 18px; font-weight: 700; color: #16a34a; margin-bottom: 8px; }
+  .btn-add-cart { background: linear-gradient(90deg, #10b981, #059669); color: #fff; border: none; padding: 8px 12px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .btn-add-cart:hover { opacity: 0.9; }
+  
+  .approval-msg { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 16px; border-radius: 6px; margin: 20px 0; }
+  .approval-msg p { margin: 0; color: #92400e; font-weight: 600; }
+  
+  @media (max-width: 768px) {
+    .vendor-hero { padding: 20px 0; }
+    .vendor-title { font-size: 22px; }
+    .food-card-inner { height: auto; flex-direction: column; }
+    .food-img-wrap { width: 100%; height: 200px; }
+    .food-info { width: 100%; }
+    .franchise-top-btn { top: 12px; right: 12px; padding: 8px 14px; font-size: 13px; }
+  }
+</style>
+
+<div class="vendor-hero">
+  <a href="{% url 'vendors:fran_details' vendor.id %}" class="franchise-top-btn">
+    <i class="bi bi-briefcase"></i> Franchise
+  </a>
+  <div class="container">
+    <h1 class="vendor-title">{{ vendor.restaurant_name }}</h1>
+    <p class="vendor-owner"><i class="bi bi-shop"></i> Vendor: <strong>{{ vendor.user.username }}</strong></p>
+  </div>
+</div>
+
+<div class="container vendor-wrap">
+  {% if vendor.is_approved %}
+    <h2 class="menu-header"><i class="bi bi-list-ul"></i> Food Menu</h2>
+    <div class="row g-3">
+      {% for i in allfood %}
+      <div class="col-lg-6">
+        <div class="food-card">
+          <div class="food-card-inner">
+            <div class="food-img-wrap">
+              {% if i.food_img %}
+                <img src="{{ i.food_img.url }}" alt="{{ i.food_name }}">
+              {% else %}
+                <img src="{% static 'images/defoultimg.jpg' %}" alt="No image">
+              {% endif %}
+            </div>
+            <div class="food-info">
+              <div>
+                <p class="food-name">{{ i.food_name }}</p>
+                <p class="food-price">₹ {{ i.price }}</p>
+              </div>
+              {% if user.userregister %}
+                <form method="post" action="{% url 'cart:addcart' %}" style="display:inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="foodid" value="{{ i.id }}">
+                  <button type="submit" class="btn-add-cart"><i class="bi bi-cart-plus"></i> Add to Cart</button>
+                </form>
+              {% elif not user.is_authenticated %}
+                <a class="btn-add-cart text-center text-decoration-none" href="{% url 'auth_choice' %}?mode=login">Login to Order</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="approval-msg">
+      <p><i class="bi bi-hourglass-split"></i> This vendor is waiting for admin approval</p>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}
+    

@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<style>
+    /* Page wrapper */
+    .jumbotron {
+        background: linear-gradient(180deg,#fbfdff 0%,#f3f7ff 100%);
+        padding: 28px;
+        border-radius: 12px;
+        border: 1px solid #eef2ff;
+    }
+
+    .card.card-body {
+        background: #ffffff;
+        border: none;
+        box-shadow: 0 10px 30px rgba(18, 46, 78, 0.05);
+        padding: 28px;
+        border-radius: 12px;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 26px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 12px;
+    }
+
+    hr { border-color: #eef2ff; }
+
+    .row > .col-md-6, .row > .col-md-5, .row > .col-md-1 {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .row p { color: #334155; margin: 6px 0; font-size: 15px; }
+
+    .row p b { color: #0f172a; min-width: 150px; display: inline-block; }
+
+    .img-fluid { border-radius: 10px; box-shadow: 0 8px 22px rgba(2,6,23,0.06); max-width:100%; height:auto; }
+
+    .btn-success {
+        background: linear-gradient(90deg,#22c55e 0%,#16a34a 100%);
+        border: none;
+        padding: 8px 12px;
+        font-weight: 600;
+        border-radius: 8px;
+        box-shadow: 0 6px 18px rgba(16,185,129,0.12);
+    }
+
+    .btn-success:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(16,185,129,0.16); }
+
+    a.btn { color: #fff; }
+
+    /* Accept order primary CTA alignment */
+    .card.card-body > a.btn { display: inline-block; margin-top: 18px; }
+
+    @media (max-width: 768px) {
+        h2 { font-size: 20px; }
+        .row { gap: 12px; }
+        .row p b { min-width: 110px; }
+        .img-fluid { height: auto; }
+        .row > .col-md-1 { align-items: flex-start; }
+    }
+
+</style>
+
+<br>
+<div class="container">
+    <div class="jumbotron">
+        <div class="card card-body">
+
+            <h2 style="text-align: center;">Franchise Details of {{ vendor.restaurant_name }}</h2>
+            <hr><br>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <p><b>Restaurant Name:</b> {{ vendor.restaurant_name }}</p>
+                    <p><b>Vendor Name:</b> {{ vendor.user.username }}</p>
+                    <p><b>Address:</b> {{ vendor.address }}</p>
+                    <p><b>City:</b> {{ vendor.city }}</p>
+                    <p><b>Total Investment:</b> {{ fran.total_investment }}₹</p>
+                    <p><b>Total Years Of Aggr:</b> {{ fran.total_year_of_aggr }} Years</p>
+                    <p><b>Profit Share:</b> {{ fran.profit_share }}%</p>
+                    <p><b>Description:</b> {{ fran.description }}</p>
+                </div>
+                <!-- Vendor Details -->
+                <div class="col-md-5">
+                    <br>
+                    <label><b>License Image:</b></label>
+                    {% if vendor.restaurant_lic %}
+                        <img src="{{ vendor.restaurant_lic.url }}" class="img-fluid" width="350px">
+                    {% else %}
+                        <p>No License Image Uploaded</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-1">
+                    <a href="{% url 'vendors:emi_calci' id=vendor.id %}" class="btn btn-success">
+                        <i class="bi bi-pencil-square me-1"></i>  EMI
+                    </a>
+                </div>
+            </div>
+
+            <form method="POST" style="margin-top: 18px;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-circle me-2"></i>Accept the Order
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
